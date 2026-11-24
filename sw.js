@@ -1,15 +1,22 @@
-const CACHE = 'sigestec-beta-0.1-shell';
+const CACHE = 'sigestec-beta-cambio-11';
 const ASSETS = [
   './', './index.html', './styles.css', './manifest.webmanifest',
   './icons/icon-192.png', './icons/icon-512.png',
   './src/app.js', './src/db.js', './src/clients.js', './src/properties.js',
-  './src/jobs.js', './src/dpms.js'
+  './src/jobs.js', './src/dpms.js', './src/srt.js'
 ];
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(ASSETS)).then(() => self.skipWaiting()));
 });
+self.addEventListener('message', event => {
+  if (event.data === 'SKIP_WAITING') self.skipWaiting();
+});
 self.addEventListener('activate', event => {
-  event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(key => key !== CACHE).map(key => caches.delete(key)))).then(() => self.clients.claim()));
+  event.waitUntil(
+    caches.keys()
+      .then(keys => Promise.all(keys.filter(key => key !== CACHE).map(key => caches.delete(key))))
+      .then(() => self.clients.claim())
+  );
 });
 self.addEventListener('fetch', event => {
   if (event.request.method !== 'GET') return;

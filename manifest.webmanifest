@@ -1,7 +1,7 @@
 {
-  "name": "SIGESTEC — Sistema de Gestión Técnica",
+  "name": "SIGESTEC — Sistema Integral de Gestión Técnica",
   "short_name": "SIGESTEC",
-  "description": "Beta de sistema local de gestión técnica, modular y multiplataforma.",
+  "description": "Sistema local de gestión técnica, ensayos e inspecciones.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

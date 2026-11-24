@@ -1,5 +1,5 @@
 const DB_NAME = 'gestion-tecnica';
-const DB_VERSION = 2;
+const DB_VERSION = 4;
 
 export function openDB() {
   return new Promise((resolve, reject) => {
@@ -25,6 +25,16 @@ export function openDB() {
         const store = db.createObjectStore('dpms_calculations', { keyPath: 'id' });
         store.createIndex('jobId', 'jobId', { unique: false });
         store.createIndex('createdAt', 'createdAt', { unique: false });
+      }
+      if (!db.objectStoreNames.contains('measurements')) {
+        const store = db.createObjectStore('measurements', { keyPath: 'id' });
+        store.createIndex('jobId', 'jobId', { unique: false });
+        store.createIndex('date', 'date', { unique: false });
+      }
+      if (!db.objectStoreNames.contains('srt_protocols')) {
+        const store = db.createObjectStore('srt_protocols', { keyPath: 'id' });
+        store.createIndex('jobId', 'jobId', { unique: false });
+        store.createIndex('updatedAt', 'updatedAt', { unique: false });
       }
     };
     request.onsuccess = () => resolve(request.result);

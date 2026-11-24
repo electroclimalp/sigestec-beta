@@ -94,3 +94,6 @@ function showClientForm(root, existing, onSave) {
   });
   (v.type === 'company' ? form.elements.legalName : form.elements.firstName).focus();
 }
+
+// Formulario reutilizable para alta contextual desde otros módulos.
+export function openClientForm(root, onSave) { showClientForm(root, null, onSave); }

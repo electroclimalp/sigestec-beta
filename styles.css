@@ -24,3 +24,41 @@
 /* DPMS 0.5.4: calculation transparency */
 .dpms-formula{padding:14px 16px;border:1px solid var(--line,#dce3ec);border-radius:10px;background:var(--surface-2,#f7f9fc);font-size:13px;line-height:1.55}.dpms-formula>div:first-of-type{font-weight:700;font-size:15px;margin:5px 0}.dpms-formula small{display:block;color:var(--muted,#64748b)}.dpms-formula-values{margin-top:8px;font-variant-numeric:tabular-nums}.history-actions .danger{padding:9px 12px;font-size:12px}
 .dpms-guide{border:1px solid var(--line,#dce3ec);border-radius:10px;background:var(--surface-2,#f7f9fc);padding:12px 15px}.dpms-guide summary{font-weight:650;cursor:pointer}.dpms-guide-content{padding-top:10px;font-size:13px;line-height:1.55}.dpms-guide-content p{margin:8px 0}.dpms-guide-warning{padding:10px 12px;border-radius:8px;background:#fff5e8;border:1px solid #f2d5a9}.dpms-guide-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.dpms-guide-grid>div{display:flex;flex-direction:column;gap:3px;padding:10px;border:1px solid var(--line,#dce3ec);border-radius:8px}.dpms-guide-grid span{color:var(--muted,#64748b)}.dpms-load-card{padding:10px 0;border-bottom:1px solid var(--line,#e6e9ef)}.dpms-load-hint{margin:6px 0 0;font-size:12px;color:var(--muted,#64748b);line-height:1.45}.dpms-load-row select{width:100%;min-width:0;padding:9px;border:1px solid var(--line,#d9dee8);border-radius:8px;background:var(--surface,#fff);color:inherit}@media(max-width:800px){.dpms-guide-grid{grid-template-columns:1fr}}
+
+/* Carpeta de trabajo: resumen de contenido persistido */
+.job-content-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}.job-content-card{min-width:0;padding:17px;border:1px solid var(--line,#e1e5ed);border-radius:13px;background:var(--surface,#fff)}.job-content-card h3{font-size:16px;margin:12px 0 7px}.job-content-card p{font-size:13px;line-height:1.5}.job-content-head{display:flex;align-items:center;justify-content:space-between;gap:10px}.job-content-count{font-size:11px;color:var(--muted,#687386);padding:5px 8px;border-radius:20px;background:var(--soft,#f3f6fa)}.job-content-card .module-icon{display:grid;place-items:center;width:36px;height:36px;border-radius:10px;background:var(--soft,#f3f6fa);font-size:20px}.job-dpms-kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:12px 0}.job-dpms-kpis>div{display:grid;gap:4px;padding:10px;border-radius:9px;background:var(--soft,#f5f7fa)}.job-dpms-kpis span{font-size:11px;color:var(--muted,#687386)}.job-dpms-kpis strong{font-size:16px}.job-content-note{color:var(--muted,#687386)}.job-content-card>button{margin-top:8px}.job-content-planned{background:var(--surface-2,#fafbfd)}@media(max-width:650px){.job-content-grid{grid-template-columns:1fr}}
+
+/* Mediciones e inspecciones */
+.measurement-row{gap:14px}.measurement-row>div:first-child{min-width:0}.measurement-row strong{display:block}.measurement-row .history-actions{justify-content:flex-end}.measurement-row small{display:block;margin-top:4px}@media(max-width:650px){.measurement-row{align-items:flex-start;flex-direction:column}.measurement-row .history-actions{width:100%}.measurement-row .history-actions button{flex:1}}
+@media print{.topbar,.footer,.page-heading .heading-actions,.detail-footer button{display:none!important}body{background:#fff}.container{max-width:none;padding:0}.panel{break-inside:avoid;border:1px solid #ddd}}
+
+/* Cambio 07 · accesos directos de ensayos */
+.measurement-type-grid{grid-template-columns:repeat(3,minmax(0,1fr));}
+.measurement-type-grid .module-card{min-height:164px;padding:21px 22px;}
+.measurement-type-grid .module-card strong{font-size:16px;line-height:1.35;}
+.measurement-type-grid .module-card small{font-size:12px;line-height:1.5;max-width:92%;}
+.measurement-type-grid .srt-module-card{border-color:#9fc4e2;background:linear-gradient(135deg,#fff,#f4f9fd);}
+.job-measurement-shortcuts{display:flex;flex-wrap:wrap;gap:8px;margin-top:15px;}
+.job-measurement-shortcuts .primary,.job-measurement-shortcuts .secondary{padding:9px 12px;font-size:12px;}
+@media(max-width:760px){.measurement-type-grid{grid-template-columns:repeat(2,minmax(0,1fr));}}
+@media(max-width:430px){.measurement-type-grid{grid-template-columns:1fr 1fr;}.measurement-type-grid .module-card{min-height:150px;padding:15px;}}
+
+/* Formularios técnicos específicos de ensayos */
+.measurement-specialized-form{max-width:980px;max-height:92vh;overflow:auto}
+.measurement-specialized-form .modal-head h2{display:flex;align-items:center;gap:12px}
+.measurement-symbol{display:inline-flex;align-items:center;justify-content:center;min-width:48px;height:48px;padding:0 8px;border-radius:13px;background:#eaf3fb;color:#1478c8;font-size:22px;font-weight:800;letter-spacing:-.04em}
+.technical-fields{margin:18px 0;padding:18px;border:1px solid #dce5ef;border-radius:16px;background:#fbfdff}
+.technical-fields .section-title{margin-bottom:14px}
+.technical-fields .section-title h3{margin:0 0 5px}
+.technical-fields .form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.technical-fields .full-field{grid-column:1/-1}
+.measurement-type-grid .module-icon{font-size:21px;font-weight:800;letter-spacing:-.04em}
+@media(max-width:650px){.technical-fields .form-grid{grid-template-columns:1fr}.measurement-specialized-form{max-height:95vh;padding:18px}}
+
+/* Cambio 10 · matriz compacta de ensayos RCD */
+.rcd-matrix{min-width:1040px}.rcd-matrix th{white-space:nowrap;font-size:12px}.rcd-matrix td{padding:6px 5px;vertical-align:middle}.rcd-matrix input,.rcd-matrix select{width:100%;min-width:74px;padding:8px 7px;border:1px solid var(--line,#d9dee8);border-radius:7px;background:var(--surface,#fff);color:inherit;font-size:13px}.rcd-matrix td:first-child input{min-width:175px}.rcd-matrix td:nth-child(6) input{min-width:135px}.rcd-matrix td:last-child{width:38px}.rcd-global-settings{margin:12px 0}.rcd-tests-section .table-wrap{overflow-x:auto}
+@media print{.rcd-matrix{min-width:0;width:100%;font-size:9px}.rcd-matrix th,.rcd-matrix td{padding:4px}.rcd-matrix input,.rcd-matrix select{border:0;padding:0;min-width:0;font-size:9px}.rcd-matrix td:last-child{display:none}}
+
+
+/* Aviso de actualización PWA */
+.app-update-notice{position:fixed;z-index:9999;left:50%;bottom:18px;transform:translateX(-50%);width:min(680px,calc(100vw - 28px));display:flex;align-items:center;gap:14px;padding:14px 16px;background:#14243a;color:#fff;border:1px solid #35516f;border-radius:14px;box-shadow:0 12px 36px #14243a40}.app-update-notice>div{display:grid;gap:4px;flex:1}.app-update-notice small{color:#c8d6e5;line-height:1.4}.app-update-notice button{border:0;border-radius:9px;padding:10px 14px;background:#2e80c5;color:white;font-weight:700;cursor:pointer}.app-update-notice button:disabled{opacity:.6;cursor:wait}.app-update-notice .app-update-close{padding:4px 8px;background:transparent;color:#d9e4ef;font-size:20px}@media(max-width:520px){.app-update-notice{align-items:flex-start;flex-wrap:wrap}.app-update-notice>div{flex-basis:calc(100% - 20px)}.app-update-notice #apply-app-update{flex:1}}

@@ -1,7 +1,7 @@
 import { get, put, all } from './db.js';
 import { renderClients } from './clients.js';
 import { renderProperties } from './properties.js';
-import { renderJobs } from './jobs.js';
+import { renderJobs, renderMeasurementsHub } from './jobs.js';
 import { renderDPMS } from './dpms.js';
 
 const root = document.querySelector('#app');
@@ -9,7 +9,7 @@ const modules = [
   {id:'clients', title:'Clientes', desc:'Personas y organizaciones', icon:'♙', ready:true},
   {id:'properties', title:'Inmuebles', desc:'Domicilios y propiedades', icon:'⌂', ready:true},
   {id:'jobs', title:'Trabajos', desc:'Carpetas de trabajo e historial', icon:'▤'},
-  {id:'tools', title:'Herramientas técnicas', desc:'Cálculos, mediciones e inspecciones', icon:'⌁'},
+  {id:'tools', title:'Cálculos y mediciones', desc:'Cálculos eléctricos, ensayos e inspecciones', icon:'∑'},
   {id:'finance', title:'Gestión económica', desc:'Presupuestos, materiales y servicios', icon:'$',},
   {id:'documents', title:'Documentación', desc:'Informes y documentos PDF', icon:'▧'},
   {id:'settings', title:'Configuración', desc:'Identidad y preferencias', icon:'⚙'}
@@ -19,10 +19,46 @@ async function init() {
   document.querySelector('#settings-shortcut').onclick = () => navigate('settings');
   document.querySelector('#home-shortcut').onclick = () => renderHome();
   window.addEventListener('online', updateConnection); window.addEventListener('offline', updateConnection); updateConnection();
-  if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(() => {});
+  setupAppUpdates();
   const identity = await get('settings', 'identity');
   if (!identity?.value?.completed) await renderSetup(); else { updateBrand(identity.value); await renderHome(); }
 }
+
+function setupAppUpdates() {
+  if (!('serviceWorker' in navigator)) return;
+  let refreshing = false;
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (refreshing) return;
+    refreshing = true;
+    window.location.reload();
+  });
+  navigator.serviceWorker.register('./sw.js').then(registration => {
+    const showUpdate = () => {
+      if (!registration.waiting || !navigator.serviceWorker.controller) return;
+      if (document.querySelector('#app-update-notice')) return;
+      const notice = document.createElement('aside');
+      notice.id = 'app-update-notice';
+      notice.className = 'app-update-notice';
+      notice.innerHTML = '<div><strong>Hay una actualización de SIGESTEC</strong><small>Guardá tus cambios y actualizá para usar la nueva versión.</small></div><button type="button" id="apply-app-update">Actualizar</button><button type="button" class="app-update-close" aria-label="Cerrar aviso">×</button>';
+      document.body.append(notice);
+      notice.querySelector('#apply-app-update').addEventListener('click', () => {
+        notice.querySelector('#apply-app-update').disabled = true;
+        registration.waiting?.postMessage('SKIP_WAITING');
+      });
+      notice.querySelector('.app-update-close').addEventListener('click', () => notice.remove());
+    };
+    if (registration.waiting) showUpdate();
+    registration.addEventListener('updatefound', () => {
+      const installing = registration.installing;
+      if (!installing) return;
+      installing.addEventListener('statechange', () => {
+        if (installing.state === 'installed') showUpdate();
+      });
+    });
+    registration.update().catch(() => {});
+  }).catch(() => {});
+}
+
 function updateConnection() { document.querySelector('#connection-state').textContent = navigator.onLine ? '● Local · Con conexión' : '● Sin conexión'; }
 function updateBrand(identity) { document.querySelector('#business-name').textContent = identity.tradeName || identity.name || 'Espacio de trabajo local'; }
 async function navigate(id) {
@@ -31,14 +67,14 @@ async function navigate(id) {
   if (id === 'properties') return renderProperties(root, renderHome);
   if (id === 'jobs') return renderJobs(root, renderHome);
   if (id === 'settings') return renderSettings();
-  if (id === 'tools') { root.innerHTML = `<div class="page-heading"><div><p class="eyebrow">HERRAMIENTAS TÉCNICAS</p><h1>Electricidad</h1><p class="muted">Cálculos disponibles.</p></div><button class="secondary" id="back-home">← Inicio</button></div><section class="module-grid"><button class="module-card" id="open-dpms"><span class="module-icon">∑</span><strong>DPMS</strong><small>Demanda de potencia máxima simultánea</small></button></section>`; root.querySelector('#back-home').onclick=renderHome; root.querySelector('#open-dpms').onclick=()=>navigate('jobs'); return; }
+  if (id === 'tools') { root.innerHTML = `<div class="page-heading"><div><p class="eyebrow">MÓDULO TÉCNICO</p><h1>Cálculos y mediciones</h1><p class="muted">Cálculos eléctricos, ensayos y registros de inspección.</p></div><button class="secondary" id="back-home">← Inicio</button></div><section class="module-grid"><button class="module-card" id="open-dpms"><span class="module-icon">∑</span><strong>DPMS</strong><small>Demanda de potencia máxima simultánea. Se accede desde la carpeta de cada trabajo.</small></button><button class="module-card" id="open-measurements"><span class="module-icon">▧</span><strong>Mediciones e inspecciones</strong><small>Consultar los registros técnicos de todos los trabajos.</small></button></section>`; root.querySelector('#back-home').onclick=renderHome; root.querySelector('#open-dpms').onclick=()=>navigate('jobs'); root.querySelector('#open-measurements').onclick=()=>renderMeasurementsHub(root,renderHome,()=>navigate('jobs')); return; }
   const item = modules.find(m => m.id === id);
   root.innerHTML = `<div class="page-heading"><div><p class="eyebrow">MÓDULO</p><h1>${item.title}</h1><p class="muted">${item.desc}</p></div><button class="secondary" id="back-home">← Inicio</button></div><section class="panel coming"><div class="empty-icon">${item.icon}</div><h2>Módulo previsto para una próxima etapa</h2><p>La arquitectura ya reserva este espacio. Lo incorporaremos sin rehacer el núcleo de la aplicación.</p></section>`;
   root.querySelector('#back-home').onclick = renderHome;
 }
 async function renderHome() {
   const clients = await all('clients'), properties = await all('properties'), jobs = await all('jobs');
-  root.innerHTML = `<section class="welcome"><div><p class="eyebrow">PANEL PRINCIPAL</p><h1>Tu trabajo, organizado.</h1><p>Una herramienta simple para administrar clientes, trabajos y documentación técnica.</p></div><div class="welcome-symbol">S</div></section>
+  root.innerHTML = `<section class="welcome"><div><p class="eyebrow">PANEL PRINCIPAL</p><h1>Tu trabajo, organizado.</h1><p>Una herramienta simple para administrar clientes, trabajos y documentación técnica.</p></div><div class="welcome-symbol">GT</div></section>
     <section class="stats"><div class="stat"><span>Clientes</span><strong>${clients.length}</strong></div><div class="stat"><span>Inmuebles</span><strong>${properties.length}</strong></div><div class="stat"><span>Trabajos</span><strong>${jobs.length}</strong></div></section>
     <div class="section-title"><div><h2>Accesos principales</h2><p class="muted">Elegí dónde querés trabajar.</p></div></div>
     <section class="module-grid">${modules.map(m => `<button class="module-card" data-module="${m.id}"><span class="module-icon">${m.icon}</span><strong>${m.title}</strong><small>${m.desc}</small><span class="card-arrow">→</span></button>`).join('')}</section>

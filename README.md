@@ -46,3 +46,11 @@ Abrir `http://localhost:8000` en el navegador. No borrar los datos del navegador
 - Los valores sugeridos quedan identificados como estimativos. En motores, bombas y climatización, FP=0,90 es solo un valor provisional que debe reemplazarse por el dato de placa/fabricante cuando esté disponible.
 - FU y FS no se asignan automáticamente como requisitos normativos: dependen del régimen de uso y de la simultaneidad prevista en la instalación. La referencia AEA 90364-7-770:2026, 770.9.2.1, remite al criterio del proyectista para las cargas específicas.
 - No se modificó la estructura de IndexedDB; los cálculos guardados anteriormente permanecen disponibles.
+
+
+## Cambio 07 · navegación directa de ensayos
+- Se reemplazó el acceso genérico por tarjetas independientes para PAT, diferenciales, aislación, continuidad, tensión y parámetros eléctricos e inspección visual.
+- El Protocolo SRT 900/15 tiene una tarjeta de acceso propia y visible.
+- Desde la carpeta de cada trabajo se agregaron accesos rápidos para crear cada registro sin pasar por un formulario genérico intermedio.
+- Desde el módulo general, al elegir un ensayo se selecciona el trabajo y se abre directamente el formulario con el tipo precargado.
+- Se conservan los registros existentes en IndexedDB. No se modifica ni elimina la base local.
