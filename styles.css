@@ -59,6 +59,78 @@
 .rcd-matrix{min-width:1040px}.rcd-matrix th{white-space:nowrap;font-size:12px}.rcd-matrix td{padding:6px 5px;vertical-align:middle}.rcd-matrix input,.rcd-matrix select{width:100%;min-width:74px;padding:8px 7px;border:1px solid var(--line,#d9dee8);border-radius:7px;background:var(--surface,#fff);color:inherit;font-size:13px}.rcd-matrix td:first-child input{min-width:175px}.rcd-matrix td:nth-child(6) input{min-width:135px}.rcd-matrix td:last-child{width:38px}.rcd-global-settings{margin:12px 0}.rcd-tests-section .table-wrap{overflow-x:auto}
 @media print{.rcd-matrix{min-width:0;width:100%;font-size:9px}.rcd-matrix th,.rcd-matrix td{padding:4px}.rcd-matrix input,.rcd-matrix select{border:0;padding:0;min-width:0;font-size:9px}.rcd-matrix td:last-child{display:none}}
 
+.backup-panel{margin-top:16px;max-width:720px}.backup-panel h2{margin:0 0 8px;font-size:18px}.backup-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}.backup-panel .local-note{line-height:1.5}
 
-/* Aviso de actualización PWA */
-.app-update-notice{position:fixed;z-index:9999;left:50%;bottom:18px;transform:translateX(-50%);width:min(680px,calc(100vw - 28px));display:flex;align-items:center;gap:14px;padding:14px 16px;background:#14243a;color:#fff;border:1px solid #35516f;border-radius:14px;box-shadow:0 12px 36px #14243a40}.app-update-notice>div{display:grid;gap:4px;flex:1}.app-update-notice small{color:#c8d6e5;line-height:1.4}.app-update-notice button{border:0;border-radius:9px;padding:10px 14px;background:#2e80c5;color:white;font-weight:700;cursor:pointer}.app-update-notice button:disabled{opacity:.6;cursor:wait}.app-update-notice .app-update-close{padding:4px 8px;background:transparent;color:#d9e4ef;font-size:20px}@media(max-width:520px){.app-update-notice{align-items:flex-start;flex-wrap:wrap}.app-update-notice>div{flex-basis:calc(100% - 20px)}.app-update-notice #apply-app-update{flex:1}}
+.backup-automation{margin-top:22px;padding:18px;border:1px solid var(--border,#dce3ec);border-radius:14px;background:var(--surface-soft,#f7f9fc)}
+.backup-automation h3{margin:0 0 8px;font-size:17px}
+.backup-automation>label:not(.backup-toggle){display:block;max-width:320px;margin:14px 0 8px;font-weight:600}
+.backup-automation select{display:block;width:100%;margin-top:6px;padding:11px;border:1px solid var(--border,#dce3ec);border-radius:9px;background:white;color:inherit;font:inherit}
+.backup-toggle{display:flex;align-items:center;gap:9px;margin:14px 0;font-weight:600}
+.backup-toggle input{width:18px;height:18px;accent-color:#287db8}
+.backup-caveat{line-height:1.5;margin-top:12px}
+
+
+/* Cambio 17: cálculo independiente de caída TP–TS */
+.voltage-drop-panel .form-grid{margin:14px 0}.voltage-drop-panel [hidden]{display:none!important}#vd-results{margin:14px 0}.voltage-drop-panel .dpms-kpis{grid-template-columns:repeat(auto-fit,minmax(170px,1fr))}
+
+/* DPMS: el atributo hidden debe prevalecer sobre el display:grid del formulario. */
+.dpms-form[hidden]{display:none!important}
+.dpms-form:not([hidden]){display:grid;gap:22px}
+#dpms-current{margin-bottom:22px}
+#dpms-current .dpms-snapshot{display:grid;gap:18px}
+#dpms-current .dpms-kpis{margin:4px 0}
+#dpms-current .dpms-formula{margin-top:4px}
+#dpms-current h4{margin:8px 0 0}
+.voltage-drop-panel{display:grid;gap:16px}
+.voltage-drop-panel>.section-title{margin-bottom:0}
+.voltage-drop-panel #vd-results{display:grid;gap:14px;margin:0}
+.voltage-drop-panel #vd-results h3{margin:0}
+.voltage-drop-panel #vd-results h4{margin:10px 0 0}
+#dpms-history{display:grid;gap:4px}
+#dpms-history .history-row{gap:16px;align-items:center}
+@media(max-width:760px){.dpms-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.history-row{align-items:flex-start;flex-direction:column}.history-actions{flex-wrap:wrap}}
+@media print{.dpms-form[hidden]{display:none!important}}
+
+/* Cambio 26 · biblioteca de instrumentos */
+.instrument-list{display:grid;gap:10px}.instrument-row{display:flex;justify-content:space-between;align-items:center;gap:18px;padding:15px;border:1px solid var(--line,#dce3ec);border-radius:12px;background:var(--surface,#fff)}.instrument-row>div:first-child{min-width:0}.instrument-row strong,.instrument-row small{display:block}.instrument-row small{margin-top:5px;color:var(--muted,#64748b);line-height:1.4}.instrument-row.is-inactive{opacity:.62}.instrument-form{max-width:760px;max-height:92vh;overflow:auto}.instrument-categories{margin:16px 0;padding:14px;border:1px solid var(--line,#dce3ec);border-radius:10px}.instrument-categories legend{font-weight:700;padding:0 6px}.instrument-category-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}.instrument-category-grid label{display:flex;align-items:center;gap:8px;font-weight:500}.instrument-category-grid input{width:auto}.instrument-form textarea{width:100%}@media(max-width:650px){.instrument-row{align-items:flex-start;flex-direction:column}.instrument-row .history-actions{width:100%}.instrument-row .history-actions button{flex:1}.instrument-category-grid{grid-template-columns:1fr}}
+
+/* Exportación selectiva de mediciones */
+.measurement-export-select{display:flex;align-items:center;justify-content:center;min-width:28px;margin:0 4px 0 0}
+.measurement-export-select input{width:17px;height:17px;accent-color:var(--accent,#2478b8);cursor:pointer}
+
+/* Documentación: selección múltiple y exportación conjunta */
+.document-bulk-actions{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:14px 0;border-bottom:1px solid var(--line,#e6e9ef);margin-bottom:6px}.document-bulk-actions .measurement-export-select{justify-content:flex-start;min-width:0}.document-bulk-actions #document-export-selected{margin-left:auto}.document-bulk-actions button:disabled{opacity:.45;cursor:not-allowed}
+@media(max-width:700px){.document-bulk-actions{align-items:stretch;flex-direction:column}.document-bulk-actions #document-export-selected{margin-left:0;width:100%}}
+
+
+/* Ubicación opcional de inmuebles */
+.property-location{margin:16px 0;padding:16px;border:1px solid var(--line,#dce3ec);border-radius:12px;display:grid;gap:12px}
+.property-location legend{padding:0 7px;font-weight:700;color:var(--text,#172b45)}
+.property-location p{margin:0;line-height:1.45}
+.property-location .form-grid{margin:0}
+.property-location #use-current-location{justify-self:start}
+.property-location #location-status{display:block;min-height:1.2em}
+.detail-line a{color:var(--accent,#2478b8);text-decoration:none}
+.detail-line a:hover{text-decoration:underline}
+.property-location-map{height:300px;width:100%;border:1px solid #dce4ec;border-radius:11px;overflow:hidden;background:#eef3f7;z-index:0}.map-loading{height:100%;display:grid;place-items:center;padding:20px;text-align:center;color:#718096;font-size:13px}.location-search-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap}.location-search-actions .local-note{margin:0}.address-search-results{display:grid;gap:6px;max-height:190px;overflow:auto;padding:8px;border:1px solid #e1e8ef;border-radius:10px;background:#f8fafc}.address-result{border:0;background:white;text-align:left;padding:10px 12px;border-radius:7px;color:#30445b;font-size:12px;line-height:1.4;cursor:pointer}.address-result:hover{background:#eaf3fa}.property-map-help{font-size:12px;color:#718096;margin:0 0 -4px}@media(max-width:600px){.property-location-map{height:260px}.location-search-actions{align-items:flex-start}.location-search-actions .secondary{width:100%}}
+
+/* Cambio 34 · catálogo regional de mano de obra y presupuestos */
+.labor-tabs{display:flex;gap:9px;flex-wrap:wrap;margin:0 0 16px}.labor-toolbar{display:flex;align-items:end;gap:14px;flex-wrap:wrap;margin-bottom:16px}.labor-toolbar label{min-width:220px;max-width:320px;flex:1}.labor-toolbar select,.labor-filters input,.labor-filters select,.labor-meta input,.labor-meta select,.labor-quote-item input,.labor-notes textarea{width:100%;padding:10px 12px;border:1px solid var(--line,#dce3ec);border-radius:9px;background:var(--surface,#fff);color:inherit;font:inherit}.labor-region-note{font-size:12px;color:var(--muted,#64748b);flex:2;min-width:200px;padding:8px 0}.labor-layout{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(340px,1fr);gap:16px;align-items:start}.labor-catalog,.labor-quote-panel{min-width:0}.labor-filters{display:grid;grid-template-columns:minmax(0,1fr) minmax(180px,260px);gap:10px;margin:14px 0}.labor-price-list{display:grid;gap:0}.labor-price-row{display:flex;align-items:center;gap:14px;padding:13px 0;border-bottom:1px solid var(--line,#e5eaf0)}.labor-price-main{flex:1;min-width:180px}.labor-price-main strong,.labor-price-main small{display:block}.labor-price-main strong{font-size:13px;line-height:1.4}.labor-price-main small,.labor-quote-item small{color:var(--muted,#68788c);font-size:11px;margin-top:4px}.labor-price-values{display:flex;gap:12px;flex-wrap:wrap;justify-content:flex-end}.labor-price-values>div{display:grid;gap:3px;text-align:right}.labor-price-values small{font-size:10px;color:var(--muted,#718096)}.labor-price-values b{font-size:12px;white-space:nowrap}.labor-add{white-space:nowrap;padding:8px 11px;font-size:12px}.labor-meta{display:grid;gap:10px}.labor-meta label,.labor-quote-item label,.labor-notes{display:grid;gap:5px;font-size:12px;font-weight:650}.labor-quote-items{display:grid;margin-top:15px}.labor-quote-item{display:grid;grid-template-columns:minmax(0,1fr) 76px auto 26px;gap:9px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line,#e5eaf0)}.labor-quote-item>div{min-width:0}.labor-quote-item>div strong,.labor-quote-item>div small{display:block}.labor-quote-item>div strong{font-size:12px;line-height:1.4}.labor-quote-item> b{font-size:12px;white-space:nowrap}.labor-quote-item input{padding:7px 6px}.labor-total{display:flex;justify-content:space-between;align-items:center;padding:17px 0;margin-top:6px;border-top:2px solid var(--line,#dce3ec);font-weight:700}.labor-total strong{font-size:22px;color:var(--accent,#2478b8)}.labor-notes{margin-top:12px}.labor-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px}.labor-actions button{flex:1}.labor-quote-panel .local-note,.labor-catalog .local-note{font-size:11px;line-height:1.5;margin-top:13px}.labor-quote-panel .empty-state{padding:20px 0;color:var(--muted,#718096);font-size:13px;text-align:center}.labor-price-row .small{padding:7px 10px}
+@media(max-width:1050px){.labor-layout{grid-template-columns:1fr}.labor-quote-panel{order:-1}}
+@media(max-width:650px){.labor-filters{grid-template-columns:1fr}.labor-price-row{align-items:flex-start;flex-wrap:wrap}.labor-price-values{justify-content:flex-start;width:100%;padding-left:0}.labor-price-values>div{text-align:left}.labor-add{margin-left:auto}.labor-quote-item{grid-template-columns:minmax(0,1fr) 65px auto 24px;gap:6px}.labor-quote-item> b{font-size:11px}.labor-tabs button{flex:1}.labor-toolbar{align-items:stretch;flex-direction:column}.labor-toolbar label{max-width:none}}
+@media print{.labor-tabs,.labor-toolbar,.labor-catalog,.page-heading,.topbar,.footer{display:none!important}}
+
+.labor-price-values .text-button{display:block;border:0;background:transparent;color:var(--accent,#2478b8);font-size:10px;padding:2px 0;margin-left:auto;cursor:pointer}
+
+/* Cambio 35 · resumen regional de fuentes y promedio de referencias */
+.labor-region-meta{display:grid;gap:4px;flex:1 1 100%;padding:11px 13px;border:1px solid var(--line,#dce3ec);border-radius:10px;background:var(--surface-soft,#f7f9fc);font-size:12px;line-height:1.45}.labor-region-meta strong{font-size:12px}.labor-region-meta span,.labor-region-meta small{color:var(--muted,#64748b)}.labor-price-values>div{max-width:250px}.labor-price-values>div>small:last-child{white-space:normal;line-height:1.35}.labor-price-row .labor-add:disabled{opacity:.4;cursor:not-allowed}
+@media(max-width:650px){.labor-region-meta{flex-basis:auto}.labor-price-values>div{max-width:none}}
+
+.labor-scope-note{display:block!important;max-width:560px;color:var(--muted,#64748b);font-size:11px!important;line-height:1.45;margin-top:6px!important}.boca-config{margin:14px 0;padding:14px;border:1px solid var(--line,#dce3ec);border-radius:11px;background:var(--surface-soft,#f7f9fc)}.boca-config h3{font-size:15px;margin:0 0 6px}.boca-config p{font-size:12px;line-height:1.45;color:var(--muted,#64748b);margin:5px 0 10px}.boca-config label{display:grid;gap:5px;font-size:12px;font-weight:650;margin:10px 0}.boca-config input,.boca-config select{width:100%;padding:9px 10px;border:1px solid var(--line,#dce3ec);border-radius:8px;background:var(--surface,#fff);color:inherit;font:inherit}.boca-config>small{display:block;font-size:11px;line-height:1.4;color:var(--muted,#64748b)}.boca-config .boca-preview{font-weight:700;color:var(--text,#172b45);padding:8px 0}
+.labor-extra-references{margin-top:20px;padding-top:16px;border-top:1px solid var(--line,#dce3ec)}.labor-extra-references h3{font-size:14px;margin:0 0 6px}.labor-extra-references>p{font-size:11px;line-height:1.45}.labor-benchmark-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:9px;margin-top:10px}.labor-benchmark-grid article{padding:12px;border:1px solid var(--line,#dce3ec);border-radius:9px;background:var(--surface-soft,#f7f9fc);font-size:11px;line-height:1.45}.labor-benchmark-grid article>b,.labor-benchmark-grid article>small,.labor-benchmark-grid article>strong{display:block}.labor-benchmark-grid article>small{color:var(--muted,#64748b);margin:4px 0 8px}.labor-benchmark-grid article>strong{font-size:15px;margin-top:5px}.labor-benchmark-grid article p{margin:6px 0}
+
+.custom-item-editor{margin:12px 0;padding:15px;border:1px solid var(--accent,#2478b8);border-radius:11px;background:var(--surface-soft,#f7f9fc)}.custom-item-editor h3{margin:0 0 12px;font-size:15px}.custom-item-fields{display:grid;grid-template-columns:2fr 1.4fr 1fr 1fr;gap:10px}.custom-item-fields label{display:grid;gap:5px;font-size:12px;font-weight:650}.custom-item-fields input,.custom-item-fields select{width:100%;min-width:0;padding:9px 10px;border:1px solid var(--line,#dce3ec);border-radius:8px;background:var(--surface,#fff);color:inherit;font:inherit}.custom-item-editor p{font-size:11px;margin:10px 0}.labor-custom-actions{display:flex;gap:6px;align-items:center}.labor-custom-actions .text-button{font-size:11px}.text-button.danger{color:#b42318}@media(max-width:760px){.custom-item-fields{grid-template-columns:1fr 1fr}.labor-catalog .section-title{align-items:flex-start;flex-wrap:wrap}}
+
+/* Ajustes comerciales del presupuesto */
+.quote-adjustments{margin-top:18px;padding:15px;border:1px solid var(--line,#dce3ec);border-radius:12px;background:var(--surface-soft,rgba(127,145,166,.06))}.quote-adjustments .section-title{margin-bottom:12px}.quote-adjustments h3{margin:0;font-size:15px}.quote-adjustment-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}.quote-adjustment-fields label{display:grid;gap:5px;font-size:12px;font-weight:650}.quote-adjustment-fields input,.quote-adjustment-fields select{width:100%;min-width:0;padding:9px 10px;border:1px solid var(--line,#dce3ec);border-radius:9px;background:var(--surface,#fff);color:inherit;font:inherit}.quote-adjustment-help{font-size:11px;line-height:1.45;margin:10px 0}.quote-totals{display:grid;gap:7px;padding-top:10px;border-top:1px solid var(--line,#dce3ec);font-size:12px}.quote-totals>div{display:flex;justify-content:space-between;gap:12px}.quote-grand-total{margin-top:5px;padding-top:10px;border-top:2px solid var(--line,#cbd5e1);align-items:center;font-weight:750}.quote-grand-total strong{font-size:22px;color:var(--accent,#2478b8)}
+@media(max-width:520px){.quote-adjustment-fields{grid-template-columns:1fr}}

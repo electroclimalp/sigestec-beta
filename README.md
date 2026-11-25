@@ -1,56 +1,58 @@
-# Gestión Técnica v0.5.6
+# SIGESTEC · Cambio 41 · v0.5.35
 
-Versión de trabajo que incorpora el módulo DPMS ampliado.
+## Revisión del catálogo y nuevas referencias
+- Se corrige el tratamiento de **boca completa**: AAIERIC publica un importe directo; Electro Instalador presenta tareas desglosadas y no un precio completo con alcance estrictamente equivalente. El catálogo conserva el valor directo AAIERIC y deja de promediarlo con un valor inexistente de EI. La diferencia entre una reconstrucción por componentes y el precio directo queda explicitada para evitar comparaciones falsas.
+- Se mantiene la distinción entre canalización metálica y PVC, tanto embutida como a la vista. No se extrapola automáticamente el valor de cableado de una modalidad de cañería a otra.
+- Se incorporan referencias complementarias de mercado de Clickie (octubre 2026), AppMaestro (noviembre 2026), Revista CIFRAS (agosto-septiembre 2026) y Muovi (junio 2026, citado por fuente secundaria). Se muestran en un bloque independiente, con su alcance geográfico y límites metodológicos; no se mezclan ni promedian con las referencias profesionales del catálogo.
+- Se incorporan en un bloque separado los honorarios profesionales del Colegio Público de Ingenieros de Formosa (septiembre 2026). No se confunden con mano de obra de ejecución ni alteran los precios del catálogo.
+- Las referencias complementarias se presentan como contraste de mercado, no como tarifas oficiales ni como precios automáticamente aplicables a todas las regiones. Los valores de Chubut y Río Negro se presentan como referencias regionales estimativas, elaboradas a partir de referencias sectoriales y relevamientos de mercado; no constituyen tarifas oficiales.
 
-## Novedades
-- La ficha de inmueble incorpora tipo (vivienda, departamento/unidad funcional, PH, edificio, local, oficina, industrial, etc.), superficie cubierta y semicubierta, superficies por unidad, cantidad de plantas y cantidad de unidades funcionales.
-- El DPMS recupera el inmueble vinculado al trabajo y permite definir el alcance: inmueble completo, unidad funcional o sector/instalación parcial.
-- La superficie de aplicación se calcula como superficie cubierta + 50 % de semicubierta, según AEA 90364-7-770:2026, 770.8.1.1.
-- Para viviendas se determina el grado de electrificación por superficie y se verifica la cantidad/distribución mínima de circuitos según 770.8.3.1, Tabla 770.8.I, 770.8.3.2 y Tabla 770.8.II.
-- Se conserva el límite de 15 bocas por circuito y se presenta un detalle individual de circuitos y cargas específicas.
-- El resultado muestra la cantidad de circuitos finales de uso general/especial y el factor de simultaneidad aplicado según Tabla 770.9.II.
-- El detalle individual separa demanda de referencia y demanda DPMS luego del factor de simultaneidad; las cargas específicas muestran potencia, FP, FU, FS y demanda propia.
-- El historial ahora permite abrir un cálculo guardado en modo consulta y recuperar sus datos como base de una nueva versión.
-- Cada cálculo conserva copia de los datos del inmueble, alcance, entradas y resultados; las versiones previas no se sobrescriben.
-- Cache de PWA actualizado.
+## Ítems personalizados
+- Se incorpora el botón **Agregar ítem personalizado** al catálogo. Permite definir descripción, categoría, unidad y precio unitario.
+- Los ítems se pueden editar, eliminar y agregar a presupuestos. El precio se puede ajustar por región sin alterar el precio base definido.
+- Los ítems personalizados se guardan en el nuevo store `labor_custom_items` y se incluyen en las copias de seguridad y restauraciones.
 
-## Importante
-- Al eliminar un trabajo, también se eliminan sus cálculos DPMS asociados. La aplicación solicita confirmación e informa la cantidad antes de ejecutar la eliminación.
-- Las fichas de inmuebles creadas en versiones anteriores no tenían campos de superficie. Para esos registros hay que entrar una vez en **Editar ficha** y completar superficie cubierta, semicubierta (si existe), plantas y, cuando corresponda, superficies por unidad.
-- En edificios con varias unidades, para calcular una unidad se debe elegir **Unidad funcional** e ingresar la superficie de esa unidad; no usar la superficie total del edificio. Para un cálculo de edificio completo, elegir **Inmueble completo**. Los servicios comunes deben evaluarse con su alcance propio.
-- El grado por superficie se aplica a viviendas dentro del alcance de AEA 90364-7-770. La cláusula 770.8.3.1 lo condiciona a corriente asignada ≤ 63 A e Icc presunta ≤ 10 kA; esta versión aún no verifica esos dos límites, por lo que muestra el grado por superficie como orientación sujeta a esa comprobación. No se extrapola automáticamente a locales, oficinas o edificios completos.
-- La corriente trifásica que se muestra sigue siendo equivalente para carga equilibrada. No reemplaza la asignación de circuitos monofásicos/trifásicos por línea y el cálculo de la línea más cargada requerido por 770.9.3.1. Esa etapa queda pendiente antes de validar el DPMS como herramienta definitiva de dimensionamiento.
-- Los valores FU/FS de cargas específicas son criterios de proyecto; no son factores universales fijados por la AEA.
+## Compatibilidad y datos
+- IndexedDB sube de versión 7 a 8 mediante una actualización incremental que crea únicamente el nuevo store `labor_custom_items`; no elimina ni recrea stores existentes.
+- No se reordenan ni renumeran los conceptos existentes (`mo-1` a `mo-70` y los IDs ya existentes), para preservar overrides regionales guardados.
+- No se alteran presupuestos existentes: sus importes, descripciones y referencias históricas permanecen como fueron guardados.
+- Se actualiza la caché del service worker a `gestion-tecnica-shell-v46` para que el navegador descargue los archivos nuevos.
 
-## Ejecución local
-Extraer la carpeta y ejecutar desde ella:
+## Ajuste de cantidades
+- En las cantidades de los renglones del presupuesto, las flechas del campo numérico avanzan de a unidades enteras (`step=1`) en lugar de décimas. El valor ya cargado no se redondea ni se modifica automáticamente.
 
-```powershell
-py -m http.server 8000
-```
+## Compatibilidad de esta actualización
+- No cambia la estructura de IndexedDB ni requiere migración. Se conservan los datos y presupuestos existentes.
+- Se actualiza la caché del service worker a `gestion-tecnica-shell-v47`.
 
-Abrir `http://localhost:8000` en el navegador. No borrar los datos del navegador ni cambiar de navegador/origen para conservar la base local.
+## Instalación
+Reemplazar los archivos de la versión anterior por los de este paquete, conservando el origen de datos local del navegador. No borrar datos del sitio ni limpiar IndexedDB.
 
-
-## Correcciones v0.5.5
-- La selección de alcance sincroniza la superficie desde los campos del inmueble; departamentos y PH priorizan la superficie de unidad funcional y admiten la superficie general como respaldo cuando corresponde.
-- Se fuerza la actualización de caché del service worker para evitar que el navegador mantenga JavaScript de una versión anterior.
-- La eliminación individual del cálculo incluye confirmación explícita y manejo de errores.
-- El historial conserva cada cálculo como registro independiente.
+## Presentación de valores regionales
+- Se retira toda mención visible a porcentajes de ajuste para Chubut y Río Negro.
+- Se mantiene el criterio de cálculo regional interno y los importes existentes.
+- Catálogo, referencias y presupuestos PDF presentan los importes como valores regionales estimativos basados en referencias sectoriales y relevamientos de mercado.
+- Se limpian también las etiquetas históricas de presupuestos guardados al mostrarlas o exportarlas, sin modificar los datos almacenados.
+- No cambia IndexedDB ni se requiere migración.
+- Se actualiza la caché del service worker a `gestion-tecnica-shell-v48`.
 
 
-## Novedades v0.5.6 — Guía de cargas específicas
-- Se incorpora una guía desplegable para explicar FP (factor de potencia), FU (factor de utilización) y FS (factor de simultaneidad), con fórmulas y criterios de selección.
-- Se agrega un selector de tipo de carga: genérica, resistencia eléctrica, motor, bomba/presurizadora/riego y climatización.
-- Al seleccionar un tipo se proponen valores iniciales de FP, FU y FS; el técnico puede editarlos libremente.
-- Los valores sugeridos quedan identificados como estimativos. En motores, bombas y climatización, FP=0,90 es solo un valor provisional que debe reemplazarse por el dato de placa/fabricante cuando esté disponible.
-- FU y FS no se asignan automáticamente como requisitos normativos: dependen del régimen de uso y de la simultaneidad prevista en la instalación. La referencia AEA 90364-7-770:2026, 770.9.2.1, remite al criterio del proyectista para las cargas específicas.
-- No se modificó la estructura de IndexedDB; los cálculos guardados anteriormente permanecen disponibles.
+## Ajustes comerciales en presupuestos
+- Se agrega un sector de **Ajustes comerciales** al armador de presupuestos.
+- Permite aplicar un descuento porcentual o un importe fijo. El descuento no puede superar el subtotal.
+- Permite agregar impuestos mediante una tasa porcentual configurable; el cálculo se realiza sobre el subtotal luego del descuento. Puede dejarse en 0% cuando no corresponda.
+- Incorpora un precio final manual opcional para acordar un importe especial con un cliente. Al completarlo, reemplaza el total calculado y el documento muestra el total calculado y el ajuste comercial. Al dejarlo vacío, vuelve al cálculo automático.
+- El PDF y el listado de presupuestos guardados muestran el total final, y el PDF discrimina subtotal, descuento, impuestos y ajuste comercial cuando corresponda.
+- Los presupuestos anteriores siguen siendo compatibles: si no tienen ajustes guardados, se interpretan como descuento 0, impuestos 0 y total automático.
+- No se modifican precios unitarios del catálogo ni los ítems históricos de cada presupuesto.
+- No cambia IndexedDB ni requiere migración.
+- Se actualiza la caché del service worker a `gestion-tecnica-shell-v49`.
 
 
-## Cambio 07 · navegación directa de ensayos
-- Se reemplazó el acceso genérico por tarjetas independientes para PAT, diferenciales, aislación, continuidad, tensión y parámetros eléctricos e inspección visual.
-- El Protocolo SRT 900/15 tiene una tarjeta de acceso propia y visible.
-- Desde la carpeta de cada trabajo se agregaron accesos rápidos para crear cada registro sin pasar por un formulario genérico intermedio.
-- Desde el módulo general, al elegir un ensayo se selecciona el trabajo y se abre directamente el formulario con el tipo precargado.
-- Se conservan los registros existentes en IndexedDB. No se modifica ni elimina la base local.
+## Numeración correlativa de presupuestos
+- Los presupuestos nuevos reciben un número correlativo con formato `0001/AAAA`, tomando el año de la fecha del presupuesto.
+- La secuencia se conserva en el store existente `settings`, por lo que no se reinicia al cerrar la aplicación ni al eliminar un presupuesto.
+- Al asignar un número se considera también el mayor correlativo ya existente para ese año, evitando duplicados al actualizar desde versiones anteriores.
+- Los presupuestos históricos conservan su número original; los nuevos utilizan el formato correlativo.
+- No cambia la versión ni la estructura de IndexedDB; se reutiliza el store `settings`.
+- Se actualiza la caché del service worker a `gestion-tecnica-shell-v50`.

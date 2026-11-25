@@ -1,5 +1,19 @@
 const DB_NAME = 'gestion-tecnica';
-const DB_VERSION = 4;
+const DB_VERSION = 8;
+
+// Normaliza los valores numéricos persistidos a un decimal. Se conserva la
+// precisión geográfica para que las coordenadas sigan siendo útiles en mapas.
+export function normalizeStoredValue(value, key = '') {
+  if (typeof value === 'number' && Number.isFinite(value)) {
+    if (/^(lat|latitude|lng|lon|long|longitude)$/i.test(key)) return value;
+    return Math.round((value + Number.EPSILON) * 10) / 10;
+  }
+  if (Array.isArray(value)) return value.map(item => normalizeStoredValue(item));
+  if (value && typeof value === 'object') {
+    return Object.fromEntries(Object.entries(value).map(([k, v]) => [k, normalizeStoredValue(v, k)]));
+  }
+  return value;
+}
 
 export function openDB() {
   return new Promise((resolve, reject) => {
@@ -31,10 +45,35 @@ export function openDB() {
         store.createIndex('jobId', 'jobId', { unique: false });
         store.createIndex('date', 'date', { unique: false });
       }
+      if (!db.objectStoreNames.contains('instruments')) {
+        const store = db.createObjectStore('instruments', { keyPath: 'id' });
+        store.createIndex('active', 'active', { unique: false });
+        store.createIndex('updatedAt', 'updatedAt', { unique: false });
+      }
+      if (!db.objectStoreNames.contains('labor_regions')) db.createObjectStore('labor_regions', { keyPath: 'id' });
+      if (!db.objectStoreNames.contains('labor_custom_items')) db.createObjectStore('labor_custom_items', { keyPath: 'id' });
+      if (!db.objectStoreNames.contains('labor_quotes')) {
+        const store = db.createObjectStore('labor_quotes', { keyPath: 'id' });
+        store.createIndex('clientId', 'clientId', { unique: false });
+        store.createIndex('propertyId', 'propertyId', { unique: false });
+        store.createIndex('updatedAt', 'updatedAt', { unique: false });
+      }
       if (!db.objectStoreNames.contains('srt_protocols')) {
         const store = db.createObjectStore('srt_protocols', { keyPath: 'id' });
         store.createIndex('jobId', 'jobId', { unique: false });
         store.createIndex('updatedAt', 'updatedAt', { unique: false });
+      }
+      // Migra los registros existentes sin eliminar ni recrear almacenes.
+      for (const name of Array.from(db.objectStoreNames)) {
+        const store = request.transaction.objectStore(name);
+        const cursorRequest = store.openCursor();
+        cursorRequest.onsuccess = () => {
+          const cursor = cursorRequest.result;
+          if (!cursor) return;
+          const normalized = normalizeStoredValue(cursor.value);
+          if (JSON.stringify(normalized) !== JSON.stringify(cursor.value)) cursor.update(normalized);
+          cursor.continue();
+        };
       }
     };
     request.onsuccess = () => resolve(request.result);
@@ -55,7 +94,7 @@ export async function put(storeName, value) {
   const db = await openDB();
   return new Promise((resolve, reject) => {
     const tx = db.transaction(storeName, 'readwrite');
-    tx.objectStore(storeName).put(value);
+    tx.objectStore(storeName).put(normalizeStoredValue(value));
     tx.oncomplete = () => resolve(value);
     tx.onerror = () => reject(tx.error);
   });

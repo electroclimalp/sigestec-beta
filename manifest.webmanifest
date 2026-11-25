@@ -1,15 +1,12 @@
 {
-  "name": "SIGESTEC — Sistema Integral de Gestión Técnica",
-  "short_name": "SIGESTEC",
-  "description": "Sistema local de gestión técnica, ensayos e inspecciones.",
+  "name": "Gestión Técnica",
+  "short_name": "Gestión Técnica",
+  "description": "Sistema local de gestión técnica",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "background_color": "#f3f6fa",
   "theme_color": "#14243a",
   "lang": "es-AR",
-  "icons": [
-    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
-    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
-  ]
+  "icons": []
 }
