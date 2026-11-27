@@ -1,7 +1,7 @@
 {
-  "name": "Gestión Técnica",
-  "short_name": "Gestión Técnica",
-  "description": "Sistema local de gestión técnica",
+  "name": "SIGESTEC · Sistema Integral de Gestión Técnica",
+  "short_name": "SIGESTEC",
+  "description": "Plataforma profesional de gestión técnica",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

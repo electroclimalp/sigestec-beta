@@ -1,5 +1,5 @@
 const DB_NAME = 'gestion-tecnica';
-const DB_VERSION = 8;
+const DB_VERSION = 10;
 
 // Normaliza los valores numéricos persistidos a un decimal. Se conserva la
 // precisión geográfica para que las coordenadas sigan siendo útiles en mapas.
@@ -52,6 +52,8 @@ export function openDB() {
       }
       if (!db.objectStoreNames.contains('labor_regions')) db.createObjectStore('labor_regions', { keyPath: 'id' });
       if (!db.objectStoreNames.contains('labor_custom_items')) db.createObjectStore('labor_custom_items', { keyPath: 'id' });
+      if (!db.objectStoreNames.contains('materials')) { const store = db.createObjectStore('materials', { keyPath: 'id' }); store.createIndex('category', 'category', { unique: false }); store.createIndex('updatedAt', 'updatedAt', { unique: false }); }
+      if (!db.objectStoreNames.contains('material_lists')) { const store = db.createObjectStore('material_lists', { keyPath: 'id' }); store.createIndex('clientId', 'clientId', { unique: false }); store.createIndex('updatedAt', 'updatedAt', { unique: false }); }
       if (!db.objectStoreNames.contains('labor_quotes')) {
         const store = db.createObjectStore('labor_quotes', { keyPath: 'id' });
         store.createIndex('clientId', 'clientId', { unique: false });

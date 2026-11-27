@@ -1,6 +1,7 @@
 import { all, put, remove, get } from './db.js';
 import { renderProperties, showPropertyDetail } from './properties.js';
-import { openJob, renderJobs } from './jobs.js';
+import { openJob, renderJobs, renderDocumentsHub } from './jobs.js';
+import { renderLabor } from './labor.js';
 
 const esc = (value = '') => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const displayName = c => c.type === 'company' ? (c.legalName || c.tradeName || 'Empresa sin nombre') : `${c.firstName || ''} ${c.lastName || ''}`.trim() || 'Cliente sin nombre';
@@ -33,12 +34,22 @@ export async function renderClients(root, goHome = () => {}, initialSearch = '')
 async function showClientDetail(root, clients, id, refresh, goHome) {
   const client = clients.find(c => c.id === id);
   if (!client) return;
-  const properties = (await all('properties')).filter(p => p.clientId === id);
-  const jobs = (await all('jobs')).filter(j => j.clientId === id);
+  const [allProperties, allJobs, allLists, allQuotes, allDPMS, allMeasurements, allProtocols] = await Promise.all([
+    all('properties'), all('jobs'), all('material_lists'), all('labor_quotes'), all('dpms_calculations'), all('measurements'), all('srt_protocols')
+  ]);
+  const properties = allProperties.filter(p => p.clientId === id);
+  // Include jobs linked directly to the client and legacy jobs whose property identifies the client.
+  const propertyIds = new Set(properties.map(p => p.id));
+  const jobs = allJobs.filter(j => j.clientId === id || propertyIds.has(j.propertyId));
+  const jobIds = new Set(jobs.map(j => j.id));
+  const relatedLists = allLists.filter(x => x.clientId === id || propertyIds.has(x.propertyId) || jobIds.has(x.jobId));
+  const relatedQuotes = allQuotes.filter(x => x.clientId === id || propertyIds.has(x.propertyId) || jobIds.has(x.jobId));
+  const technicalCounts = { dpms: allDPMS.filter(x => jobIds.has(x.jobId)).length, measurements: allMeasurements.filter(x => jobIds.has(x.jobId)).length, protocols: allProtocols.filter(x => jobIds.has(x.jobId)).length };
   const name = displayName(client);
   root.innerHTML = `<div class="page-heading"><div><p class="eyebrow">FICHA DEL CLIENTE</p><h1>${esc(name)}</h1><p class="muted">${client.type === 'company' ? 'Empresa / organización' : 'Persona física'}</p></div><div class="heading-actions"><button class="secondary" id="back-list">← Clientes</button><button class="primary" id="edit-client">Editar ficha</button></div></div>
   <section class="detail-grid"><article class="panel detail-panel"><h2>Datos de contacto</h2>${detailLine(client.type === 'company' ? 'Razón social' : 'Nombre', client.type === 'company' ? client.legalName : `${client.firstName || ''} ${client.lastName || ''}`.trim())}${client.type === 'company' ? detailLine('Nombre comercial', client.tradeName) + detailLine('CUIT', client.taxId) + detailLine('Persona de contacto', client.contactName) : detailLine('DNI', client.document)}${detailLine('Teléfono', client.phone)}${detailLine('Email', client.email)}${detailLine('Domicilio', client.address)}${detailLine('Localidad', client.locality)}${detailLine('Provincia', client.province)}${detailLine('Observaciones', client.notes)}</article>
   <article class="panel detail-panel"><h2>Actividad asociada</h2><div class="related-stat"><strong>${properties.length}</strong><span>Inmuebles</span></div><div class="related-stat"><strong>${jobs.length}</strong><span>Trabajos</span></div><div class="related-properties">${properties.length ? properties.map(p => `<button class="related-property-row" data-property-id="${esc(p.id)}"><span><strong>${esc(p.name)}</strong><small>${esc([p.address,p.locality].filter(Boolean).join(', ') || 'Sin dirección')}</small></span><span>›</span></button>`).join('') : '<p class="muted">Todavía no hay inmuebles asociados.</p>'}</div><button class="secondary" id="add-property">＋ Agregar inmueble</button><div class="related-properties" style="margin-top:14px">${jobs.length ? jobs.map(j => `<button class="related-property-row" data-job-id="${esc(j.id)}"><span><strong>${esc(j.code)} · ${esc(j.name)}</strong><small>${esc(({pending:'Pendiente',in_progress:'En proceso',paused:'Pausado',completed:'Finalizado',cancelled:'Cancelado'})[j.status]||'Pendiente')} · ${esc(j.propertyId ? (properties.find(p=>p.id===j.propertyId)?.name||'Inmueble') : 'Sin inmueble')}</small></span><span>›</span></button>`).join('') : '<p class="muted">Todavía no hay trabajos asociados.</p>'}</div><button class="primary" id="add-job">＋ Nuevo trabajo</button></article></section>
+  <section class="panel" style="margin-top:18px"><div class="section-title"><div><h2>Documentación y recursos vinculados</h2><p class="muted">Se reúnen registros asociados directamente al cliente, a sus inmuebles o a sus trabajos.</p></div></div><div class="job-content-grid"><article class="job-content-card"><h3>Listados de materiales</h3><strong>${relatedLists.length} ${relatedLists.length===1?'listado':'listados'}</strong>${relatedLists.length?relatedLists.map(x=>`<button type="button" class="related-property-row" data-open-material-list="${esc(x.id)}"><span><strong>${esc(x.title||'Listado sin título')}</strong><small>${Number(x.items?.length)||0} ítems · Abrir listado</small></span><span>›</span></button>`).join(''):'<p class="muted">Sin listados asociados.</p>'}</article><article class="job-content-card"><h3>Presupuestos</h3><strong>${relatedQuotes.length} ${relatedQuotes.length===1?'presupuesto':'presupuestos'}</strong>${relatedQuotes.length?relatedQuotes.map(x=>`<button type="button" class="related-property-row" data-open-quote="${esc(x.id)}"><span><strong>${esc(x.title||'Presupuesto')}</strong><small>N.º ${esc(x.number||'Sin número')} · Abrir presupuesto</small></span><span>›</span></button>`).join(''):'<p class="muted">Sin presupuestos asociados.</p>'}</article><article class="job-content-card"><h3>Documentación técnica</h3><strong>${technicalCounts.dpms+technicalCounts.measurements+technicalCounts.protocols} registros</strong><p class="job-content-note">${technicalCounts.dpms} DPMS · ${technicalCounts.measurements} mediciones · ${technicalCounts.protocols} protocolos SRT</p><button type="button" class="secondary" id="open-client-technical-docs" ${technicalCounts.dpms+technicalCounts.measurements+technicalCounts.protocols?'':'disabled'}>Consultar documentación técnica</button></article></div></section>
   <div class="detail-footer"><small>Alta: ${formatDate(client.createdAt)}${client.updatedAt ? ` · Última modificación: ${formatDate(client.updatedAt)}` : ''}</small><button class="danger" id="delete-client">Eliminar cliente</button></div>`;
   root.querySelector('#back-list').onclick = refresh;
   root.querySelector('#add-property').onclick = () => renderProperties(root, goHome, id, () => showClientDetail(root, clients, id, refresh, goHome));
@@ -50,10 +61,14 @@ async function showClientDetail(root, clients, id, refresh, goHome) {
     if (!current) return;
     await showPropertyDetail(root, currentProperties, clients, current.id, () => renderProperties(root, goHome, id, () => showClientDetail(root, clients, id, refresh, goHome)), goHome, id, () => showClientDetail(root, clients, id, refresh, goHome));
   }));
+  root.querySelectorAll('[data-open-material-list]').forEach(b=>b.onclick=()=>renderLabor(root,goHome,{materialListId:b.dataset.openMaterialList}));
+  root.querySelectorAll('[data-open-quote]').forEach(b=>b.onclick=()=>renderLabor(root,goHome,{quoteId:b.dataset.openQuote}));
+  root.querySelector('#open-client-technical-docs')?.addEventListener('click',()=>renderDocumentsHub(root,goHome,jobId=>openJob(root,jobId,()=>showClientDetail(root,clients,id,refresh,goHome),goHome)));
   root.querySelector('#edit-client').onclick = () => showClientForm(root, client, async updated => { Object.assign(client, updated); await put('clients', client); await showClientDetail(root, clients, id, refresh, goHome); });
   root.querySelector('#delete-client').onclick = async () => {
-    const linked = properties.length + jobs.length;
-    if (linked) { alert(`No se puede eliminar este cliente porque tiene ${properties.length} inmueble(s) y ${jobs.length} trabajo(s) asociado(s). Primero reasigná o eliminá esos registros.`); return; }
+    const linkedLists = relatedLists.length, linkedQuotes = relatedQuotes.length;
+    const linked = properties.length + jobs.length + linkedLists + linkedQuotes;
+    if (linked) { alert(`No se puede eliminar este cliente porque conserva relaciones: ${properties.length} inmueble(s), ${jobs.length} trabajo(s), ${linkedLists} listado(s) de materiales y ${linkedQuotes} presupuesto(s). Primero reasigná o eliminá esos registros.`); return; }
     if (!confirm(`¿Eliminar definitivamente a ${name}? Esta acción no se puede deshacer.`)) return;
     await remove('clients', id); const index = clients.findIndex(c => c.id === id); if (index >= 0) clients.splice(index, 1); refresh();
   };
